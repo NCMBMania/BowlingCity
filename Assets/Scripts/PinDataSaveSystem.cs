@@ -31,15 +31,17 @@ namespace GameProgress
         void SaveToNCMB(string userName, List<double[]> pinPositionList)
         {
             NCMBObject ncmbObject_PinPosition = new NCMBObject("PinPosition");
-
             ncmbObject_PinPosition.AddRangeToList("PinPositionList", pinPositionList);
             ncmbObject_PinPosition.Add("UserName", userName);
-
             ncmbObject_PinPosition.SaveAsync((NCMBException e) =>
             {
                 if (e != null)
                 {
-                    //エラー処理
+                    //エラー処理//
+                }
+                else
+                {
+                    //成功処理//
                 }
             });
         }
@@ -78,6 +80,25 @@ namespace GameProgress
                 }
             });
         }
- 
+
+        public void CountUpPlayedNumber(string objectID)
+        {
+            NCMBObject ncmbObject = new NCMBObject("PinPosition");
+            ncmbObject.ObjectId = objectID;
+            ncmbObject.FetchAsync((NCMBException e) => {
+                if (e != null)
+                {
+                    //エラー処理
+                    Debug.Log("Object not found");
+                }
+                else
+                {
+                    //成功時の処理
+                    ncmbObject.Increment("NumberOfPlayed");
+                    ncmbObject.SaveAsync();
+
+                }
+            });
+        }
     }
 }
